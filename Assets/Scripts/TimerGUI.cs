@@ -8,14 +8,8 @@ namespace UnityChan
 	public class TimerGUI : MonoBehaviour {
 		private AudioClip[] voices;
 		private AudioSource audioSrc;
-		private float timer;
 		private bool[] countDownVoice = new bool[11];
 		private Animator anim; // Animatorへの参照
-
-		private float executedTime;
-		private int endTime;
-		private int remainedTime; //残り時間 in Sec
-		private int currentTime;
 
 		private DateTime targetDT;
 		private TimeSpan targetTS;
@@ -73,7 +67,6 @@ namespace UnityChan
 				(AudioClip)Resources.Load("Voice/univ1003"),//16「そんじゃ、始めるとしますか！」	決め台詞１
 			};
 			audioSrc.PlayOneShot(voices[16]);
-			currentTime = 0;
 			//Debug.Log (audioSrc.ToString());
 			//Debug.Log (voices[0]);
 			//GetComponent<AudioSource> ().PlayOneShot((AudioClip)Resources.Load("univ0001"));

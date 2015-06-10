@@ -17,10 +17,15 @@ namespace UnityChan
 		private int remainedTime; //残り時間 in Sec
 		private int currentTime;
 
-		private DateTime startTime;
+		private DateTime targetDT;
+		private TimeSpan targetTS;
+		private DateTime startDT;
+		private DateTime nowDT;
+		private TimeSpan diffTS;
 
 		public Canvas canvas;
 		private Text timerText;
+		private Text clockText;
 		private bool paused;
 
 		private string INIT_STRING = "INPUT TIME";
@@ -29,6 +34,8 @@ namespace UnityChan
 
 		// Use this for initialization
 		void Start () {
+			nowDT = DateTime.Now;
+			targetTS = new TimeSpan (0, 0, 0);
 			fu = gameObject.GetComponent<FaceUpdate> ();
 			ic = gameObject.GetComponent<IdleChanger> ();
 			audioSrc = GetComponent<AudioSource> ();
@@ -40,7 +47,9 @@ namespace UnityChan
 				if(child.name == "RestTime"){
 					timerText = child.gameObject.GetComponent<Text>();
 					timerText.text = INIT_STRING;
-					break;
+				}else if(child.name == "Clock"){
+					clockText = child.gameObject.GetComponent<Text>();
+					printClockText();
 				}
 			}
 			voices = new AudioClip[]{
@@ -63,7 +72,7 @@ namespace UnityChan
 				(AudioClip)Resources.Load("Voice/univ0002"),//15「それっ！」（ジャンプの際の声）	かけ声
 				(AudioClip)Resources.Load("Voice/univ1003"),//16「そんじゃ、始めるとしますか！」	決め台詞１
 			};
-			GetComponent<AudioSource>().PlayOneShot(voices[16]);
+			audioSrc.PlayOneShot(voices[16]);
 			currentTime = 0;
 			//Debug.Log (audioSrc.ToString());
 			//Debug.Log (voices[0]);
@@ -72,77 +81,69 @@ namespace UnityChan
 		
 		// Update is called once per frame
 		void Update () {
-			if(paused == true) return;
+			printClockText ();
 
-			timer = endTime - (Time.realtimeSinceStartup-executedTime);
-			//print ("timer:" + timer.ToString ());
-			if (timer <= 0.0f) {
+			if(paused == true) return;
+			nowDT = DateTime.Now;
+			diffTS = targetDT.Subtract(nowDT);
+			Debug.Log (diffTS.TotalSeconds);
+			return;
+			if (diffTS.TotalSeconds <= 0.0f) {
 				paused = true;
-				timer = 0.0f;
 				audioSrc.PlayOneShot(voices[11]);
 				anim.SetBool("Win",true);
-				currentTime = 0;
 				timerText.text = "TIME UP";
 				return;
 			};
 
-			if (timer < 11) {
-				for (int i = 1; i<11; i++) {
-					if (timer <= i && timer > i - 1) {
+			if (diffTS.TotalSeconds <= 10) {
+				for (int i = 1; i<=10; i++) {
+					if (diffTS.TotalSeconds <= i && diffTS.TotalSeconds > i - 1) {
 						if (countDownVoice [i] == false) {
 							audioSrc.PlayOneShot (voices [i - 1]);
 						}
 						countDownVoice [i] = true;
 					}
-					;
 				}
 			}
-			
-			int min = 0;
-			int sec = (int)timer;
-			if (sec >= 60) {
-				min = (int)(sec/60);
-				sec = sec % 60;
-			}
-			string secStr;
-			if (sec < 10) {
-				secStr = "0" + sec.ToString ();
-			} else {
-				secStr = sec.ToString ();
-			}
-			timerText.text = min.ToString() + ":" + secStr;
+			printTimerText (diffTS);
 			fu.OnCallChangeFace("RANDOM");
-			if (sec % 5 == 0) {
+		}
 
-			}
+		private void printTimerText(TimeSpan ts){
+			timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+		}
+
+		private void printClockText(){
+			clockText.text = string.Format(DateTime.Now.ToString("HH:mm:ss"));
 		}
 
 		public void PushNumber(int i){
 			audioSrc.PlayOneShot(voices[i]);
-			currentTime = currentTime*10 + i;
-			timerText.text = currentTime.ToString();
+			targetTS = new TimeSpan (targetTS.Hours, targetTS.Minutes, targetTS.Seconds*10 + i);
+			Debug.Log (targetTS.ToString ());
+			printTimerText (targetTS);
 			anim.SetBool("Win",false);
 		}
 
 		public void PushMin(){
 			audioSrc.PlayOneShot(voices[14]);
-			timerText.text = currentTime.ToString() + ":00";
+			targetTS = new TimeSpan(targetTS.Minutes,targetTS.Seconds,0);
+			printTimerText (targetTS);
 			anim.SetBool("Win",false);
-			currentTime = currentTime*60;
 		}
 
 		public void PushClear(){
 			audioSrc.PlayOneShot (voices [13]);
 			paused = true;
 			timerText.text = INIT_STRING;
-			currentTime = 0;
+			targetTS = new TimeSpan(0);
 			anim.SetBool ("Win", false);
 		}
 
 		public void PushOK(){
 			audioSrc.PlayOneShot(voices[16]);
-			endTime = currentTime;
-			executedTime = Time.realtimeSinceStartup;
+			targetDT = nowDT.Add (targetTS);
 			paused = false;
 			anim.SetBool("Win",false);
 		}

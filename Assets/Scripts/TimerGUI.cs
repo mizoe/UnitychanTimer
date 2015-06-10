@@ -20,6 +20,8 @@ namespace UnityChan
 		public Canvas canvas;
 		private Text timerText;
 		private Text clockText;
+		private Text titleText;
+		private Text alermText;
 		private bool paused;
 
 		private string INIT_STRING = "INPUT TIME";
@@ -47,6 +49,10 @@ namespace UnityChan
 				}else if(child.name == "Clock"){
 					clockText = child.gameObject.GetComponent<Text>();
 					printClockText();
+				}else if(child.name == "Title"){
+					titleText = child.gameObject.GetComponentInChildren<Text>();
+				}else if(child.name == "Alerm"){
+					alermText = child.gameObject.GetComponent<Text>();
 				}
 			}
 			voices = new AudioClip[]{
@@ -82,8 +88,7 @@ namespace UnityChan
 			if(paused == true) return;
 			nowDT = DateTime.Now;
 			diffTS = targetDT.Subtract(nowDT);
-			Debug.Log (diffTS.TotalSeconds);
-			return;
+			//Debug.Log (diffTS.TotalSeconds);
 			if (diffTS.TotalSeconds <= 0.0f) {
 				paused = true;
 				audioSrc.PlayOneShot(voices[11]);
@@ -107,7 +112,7 @@ namespace UnityChan
 		}
 
 		private void printTimerText(TimeSpan ts){
-			timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+			timerText.text = string.Format("{0:00}h{1:00}m{2:00}s", ts.Hours, ts.Minutes, ts.Seconds);
 		}
 
 		private void printClockText(){
@@ -139,9 +144,33 @@ namespace UnityChan
 
 		public void PushOK(){
 			audioSrc.PlayOneShot(voices[16]);
-			targetDT = nowDT.Add (targetTS);
+			int overDay = 0;
+			if (DateTime.Now.Hour > targetTS.Hours) {
+				overDay = 1;
+			}
+			if (isAlerm) {
+				targetDT = new DateTime(
+					DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + overDay,
+					targetTS.Hours, targetTS.Minutes, targetTS.Seconds);
+				alermText.text = string.Format(targetDT.ToString("HH:mm:ss"));
+			}else{
+				targetDT = nowDT.Add (targetTS);
+			}
 			paused = false;
 			anim.SetBool("Win",false);
+		}
+
+		public void PushTitle(){
+			paused = true;
+			anim.SetBool("Win",false);
+			isAlerm = !isAlerm;
+			if (isAlerm) {
+				titleText.text = "Alerm";
+			} else {
+				titleText.text = "Timer";
+			}
+			targetDT = new DateTime (0);
+			targetTS = new TimeSpan (0);
 		}
 	}
 }

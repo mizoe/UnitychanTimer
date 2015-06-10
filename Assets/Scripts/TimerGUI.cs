@@ -26,8 +26,11 @@ namespace UnityChan
 		private FaceUpdate fu;
 		private IdleChanger ic;
 
+		private bool isAlerm;
+
 		// Use this for initialization
 		void Start () {
+			isAlerm = false;
 			nowDT = DateTime.Now;
 			targetTS = new TimeSpan (0, 0, 0);
 			fu = gameObject.GetComponent<FaceUpdate> ();

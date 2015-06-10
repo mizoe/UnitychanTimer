@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 namespace UnityChan
 {
@@ -15,6 +16,8 @@ namespace UnityChan
 		private int endTime;
 		private int remainedTime; //残り時間 in Sec
 		private int currentTime;
+
+		private DateTime startTime;
 
 		public Canvas canvas;
 		private Text timerText;
@@ -40,7 +43,6 @@ namespace UnityChan
 					break;
 				}
 			}
-
 			voices = new AudioClip[]{
 				(AudioClip)Resources.Load("Voice/univ1136"),//0
 				(AudioClip)Resources.Load("Voice/univ1147"),//1
@@ -63,6 +65,9 @@ namespace UnityChan
 			};
 			//GetComponent<AudioSource>().PlayOneShot(voices[10]);
 			currentTime = 0;
+			Debug.Log (audioSrc.ToString());
+			Debug.Log (voices[0]);
+			GetComponent<AudioSource> ().PlayOneShot((AudioClip)Resources.Load("univ0001"));
 		}
 		
 		// Update is called once per frame

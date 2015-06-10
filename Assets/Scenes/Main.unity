@@ -420,7 +420,7 @@ Prefab:
     - target: {fileID: 11400004, guid: 05a81c3d5091440058129444d28322f3, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 930621203}
     - target: {fileID: 11400004, guid: 05a81c3d5091440058129444d28322f3, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PushClear
@@ -1219,11 +1219,11 @@ Prefab:
       objectReference: {fileID: 930621203}
     - target: {fileID: 11400004, guid: 8a0cab5ff0a9b465bbc169d7ad27a67f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PushNumber
+      value: PushMin
       objectReference: {fileID: 0}
     - target: {fileID: 11400004, guid: 8a0cab5ff0a9b465bbc169d7ad27a67f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400004, guid: 8a0cab5ff0a9b465bbc169d7ad27a67f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -1813,7 +1813,7 @@ Prefab:
     - target: {fileID: 11400004, guid: 05a81c3d5091440058129444d28322f3, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 930621203}
     - target: {fileID: 11400004, guid: 05a81c3d5091440058129444d28322f3, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PushOK

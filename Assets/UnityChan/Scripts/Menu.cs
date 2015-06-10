@@ -53,7 +53,7 @@ namespace UnityChan
 				(AudioClip)Resources.Load("Voice/univ0002"),//15「それっ！」（ジャンプの際の声）	かけ声
 				(AudioClip)Resources.Load("Voice/univ1003"),//16「そんじゃ、始めるとしますか！」	決め台詞１
 			};
-			GetComponent<AudioSource>().PlayOneShot(voices[10]);
+			GetComponent<AudioSource>().PlayOneShot(voices[16]);
 			currentTime = 0;
 			//oneSecTimer.Interval = 1000;
 			//oneSecTimer.Elapsed += oneSecTimerTick ();
